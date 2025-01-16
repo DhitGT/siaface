@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Absensi dengan Face Recognition</title>
+  <script defer src="face-api.min.js"></script>
+  <script defer src="script.js"></script>
+  <script defer src="weather.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="styleClock.css" />
+  <link href="https://unpkg.com/@pqina/flip/dist/flip.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@pqina/flip/dist/flip.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="fetchApi.js"></script>
+  <script src="dynamicContentBerita.js"></script>
+</head>
+
+<body class="text-white font-sans">
+  <video class="video-bg" autoplay muted loop>
+    <!-- <source src="bg.mp4" type="video/mp4" /> -->
+    Your browser does not support the video tag.
+  </video>
+  <div class="max-w-[100vw] content flex flex-col jusify-between min-h-full p-4">
+    <div>
+      <div class="flex justify-between items-center bg-blue-500 p-4 rounded-t-lg">
+        <img src="/images/LOGO SMKN 2.png" class="w-24 h-24 rounded-circle" alt="" />
+        <div class="flex flex-col">
+          <h1 class="text-4xl font-bold">Sistem Absensi Face Recognition</h1>
+          <p class="text-2xl">SMK NEGERI 2 KOTA BEKASI</p>
+          <span id="keterangan" class="text-xl text-center font-bold"></span>
+        </div>
+        <img src="/images/LOGO RPL.png" class="w-24 h-24 rounded-circle" alt="" />
+      </div>
+      <div class="p-4 min-h-full rounded-b-lg">
+        <div class="flex gap-4">
+          <div style="
+                background-color: rgba(0, 0, 0, 0.11);
+                backdrop-filter: blur(5px);
+              " class="bg-white max-h-fit rounded-lg p-4">
+            <div id="container-vidio" style="position: relative; width: 500px; height: 380px">
+              <video id="video" width="500" height="380" autoplay></video>
+            </div>
+
+          </div>
+          <div style="
+                background-color: rgba(0, 0, 0, 0.11);
+                backdrop-filter: blur(5px);
+              " class="justify-start w-full rounded-lg p-4 flex flex-col items-center">
+            <div class="flex items-center h-32 gap-3 justify-start min-w-full space-x-2">
+              <div class="tick" data-did-init="handleTickInit">
+                <div data-layout="horizontal fit">
+                  <span data-key="hours" data-transform="pad(00)" data-view="flip"></span>
+
+                  <span data-view="text" data-key="sep" class="tick-text-inline"></span>
+
+                  <span data-key="minutes" data-transform="pad(00)" data-view="flip"></span>
+
+                  <span data-view="text" data-key="sep" class="tick-text-inline"></span>
+
+                  <span data-key="seconds" data-transform="pad(00)" data-view="flip"></span>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 flex min-w-full">
+              <div class="flex flex-col items-start">
+                <span id="day-name" class="text-9xl text-start font-bold"></span>
+                <span id="formatted-date" class="text-5xl text-start font-bold"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="
+              background-color: rgba(0, 0, 0, 0.11);
+              backdrop-filter: blur(5px);
+              overflow-x: hidden;
+              border: 1px solid white;
+            " class="mt-4 p-2 rounded-lg">
+          <h2 class="text-5xl font-bold mb-8 text-center">Guru Pengajar</h2>
+          <div class="swiper-container">
+            <div class="swiper-wrapper">
+              <!-- Slide 1 -->
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 border-4 border-white h-32 rounded-full mx-auto"
+                  src="/images/guru/RAMDANI,S.Kom.JPG" />
+                <p class="mt-2 text-2xl">RAMDANI,S.Kom</p>
+              </div>
+              <!-- Slide 2 -->
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/HANUJI, S.Kom..JPG" />
+                <p class="mt-2 text-2xl">HANUJI, S.Kom.</p>
+              </div>
+              <!-- Repeat for up to 8 slides -->
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/Deddy Maryanto, S.Kom.jpg" />
+                <p class="mt-2 text-2xl">DEDDY MARYANTO, S.Kom</p>
+              </div>
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/WENDY HADITTIA, S.Kom.JPG" />
+                <p class="mt-2 text-2xl">WENDY HADITTIA, S.Kom</p>
+              </div>
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/Dra.SUWARNI.JPG" />
+                <p class="mt-2 text-2xl">Dra.SUWARNI</p>
+              </div>
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/RIVAN PRASETIA, S.Kom.JPG" />
+                <p class="mt-2 text-2xl">RIVAN PRASETIA, S.Kom</p>
+              </div>
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/Kusariwati, M.Pd.jpg" />
+                <p class="mt-2 text-2xl">Kusariwati, M.Pd</p>
+              </div>
+              <div class="swiper-slide text-center">
+                <img alt="Teacher image" class="w-32 h-32 border-4 border-white rounded-full mx-auto"
+                  src="/images/guru/ATIK SUGIATI, S.Kom.JPG" />
+                <p class="mt-2 text-2xl">ATIK SUGIATI, S.Kom</p>
+              </div>
+            </div>
+
+            <!-- Navigation -->
+            <!-- <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div> -->
+
+            <!-- Pagination -->
+            <!-- <div class="swiper-pagination"></div> -->
+          </div>
+        </div>
+        <div id="dynamicContentBerita" class="flex my-6 flex flex-col gap-6">
+          <!-- Dynamic content will be inserted here -->
+          
+        </div>
+        <div style="
+              backdrop-filter: blur(5px);
+              background-color: rgba(0, 0, 0, 0.11);
+            " class="shadow-md rounded-lg p-6 w-full">
+          <!-- <h1 class="text-5xl font-bold mb-4 text-center">Cuaca di Bantargebang</h1> -->
+          <div id="weather" class="justify-start flex">
+            <img id="weather-icon" class="weather-icon mb-4 w-[12em] h-[12em]" src="" alt="Weather Icon" />
+            <div class="w-full flex flex-col justify-center gap-6">
+              <p class="text-5xl font-bold" id="condition">Loading...</p>
+              <div class="flex gap-7 justify-evenly w-full p-4">
+                <div class="flex flex-col items-center">
+                  <i class="fas fa-temperature-high text-3xl mr-2"></i>
+                  <p class="text-3xl font-semibold" id="temperature"></p>
+                </div>
+                <div class="flex flex-col items-center">
+                  <i class="fas fa-wind text-3xl mr-2"></i>
+                  <p class="text-3xl" id="wind"></p>
+                </div>
+                <div class="flex flex-col items-center">
+                  <i class="fas fa-tint text-3xl mr-2"></i>
+                  <p class="text-3xl" id="humidity"></p>
+                </div>
+                <div class="flex flex-col items-center">
+                  <i class="fas fa-cloud-rain text-3xl mr-2"></i>
+                  <p class="text-3xl" id="probability"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Popup -->
+    <div id="popup-overlay" class=""></div>
+    <div id="popup" class="">
+      <p id="message-1" class="text-9xl font-bold popup-message my-4 text-white">
+      </p>
+      <p id="message-2" class="text-6xl font-bold popup-message my-4 text-white">
+      </p>
+      <p id="message-3" class="text-4xl font-bold popup-message my-4 text-white">
+      </p>
+      <!-- Increased text size -->
+    </div>
+    <div class="mt-auto text-center">
+      <p>© 2025 Software Engineering SMKN 2. All rights reserved.</p>
+    </div>
+  </div>
+
+  <!-- Script -->
+
+  <script src="https://unpkg.com/@pqina/flip/dist/flip.min.js"></script>
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+  <script src="datetime.js"></script>
+  <script src="swipper.js"></script>
+  <script src="clock.js"></script>
+  <script src="attendance.js"></script>
+  <script src="popup.js"></script>
+  <script>
+    let sen = "";
+    updateAttendanceStatus();
+    setInterval(updateJam, 1000);
+    updateJam(); // Initial call
+
+    setInterval(updateAttendanceStatus, 1000); // Update status every minute
+  </script>
+</body>
+
+</html>
