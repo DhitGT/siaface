@@ -28,6 +28,10 @@
                         @csrf
                         <button type="submit" class="text-gray-600 hover:text-gray-800">Berita</button>
                     </form>
+                    <form action="{{ route('guru.index') }}" method="GET" id="guru-form" class="inline">
+                        @csrf
+                        <button type="submit" class="text-gray-600 hover:text-gray-800">Guru</button>
+                    </form>
                     <form action="{{ route('admin.logout') }}" method="POST" id="logout-form" class="inline">
                         @csrf
                         <button type="submit" class="text-gray-600 hover:text-gray-800">Logout</button>
@@ -57,6 +61,10 @@
                     @csrf
                     <button type="submit" class="text-gray-600 hover:text-gray-800">Berita</button>
                 </form>
+                <form action="{{ route('guru.index') }}" method="GET" id="guru-form" class="inline">
+                        @csrf
+                        <button type="submit" class="text-gray-600 hover:text-gray-800">Guru</button>
+                    </form>
                 <form action="{{ route('admin.logout') }}" method="POST" id="logout-form" class="inline">
                     @csrf
                     <button type="submit" class="text-gray-600 hover:text-gray-800">Logout</button>
@@ -72,7 +80,7 @@
 
     <footer class="text-center py-4 bg-white shadow mt-6">
         &copy;
-        {{ date('Y') }} Image Manager
+        {{ date('Y') }} Siaface
     </footer>
 
     <script>

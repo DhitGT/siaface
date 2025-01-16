@@ -19,20 +19,26 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ModelBeritaController;
-
+use App\Http\Controllers\GuruController;
 
 Route::middleware(['auth:admin'])->group(function () {
     // Route::resource('classes', ClassController::class);
 
-
+    Route::get('/guru', [GuruController::class, 'index'])->name("guru.index");
+    Route::get('/guru/create', [GuruController::class, 'create']);
+    Route::post('/guru', [GuruController::class, 'store']);
+    Route::get('/guru/{id}/edit', [GuruController::class, 'edit']);
+    Route::put('/guru/{id}', [GuruController::class, 'update']);
+    Route::delete('/guru/{id}', [GuruController::class, 'destroy']);
+    
     Route::get('/berita', [ModelBeritaController::class, 'index'])->name('berita.index');
     Route::get('/berita/create', [ModelBeritaController::class, 'create'])->name('berita.create');
     Route::post('/berita', [ModelBeritaController::class, 'store'])->name('berita.store');
     Route::get('/berita/{id}/edit', [ModelBeritaController::class, 'edit'])->name('berita.edit');
     Route::put('/berita/{id}', [ModelBeritaController::class, 'update'])->name('berita.update');
     Route::delete('/berita/{id}', [ModelBeritaController::class, 'destroy'])->name('berita.destroy');
-
-
+    
+    
     Route::resource('classes', ClassController::class)->except(['create', 'edit', 'show']);
     Route::delete('/classes/{class}', [ClassController::class, 'destroy'])->name('classes.destroy');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -45,11 +51,11 @@ Route::post('/storeAbsen', [DashboardController::class, 'store'])->name('dashboa
 
 Route::get('/images/{class}/{index}.jpg', function ($class, $index) {
     $path = "public/images/{$class}/{$index}.jpg";
-
+    
     if (!Storage::exists($path)) {
         abort(404, 'Image not found.');
     }
-
+    
     return response()->file(Storage::path($path));
 });
 
@@ -60,7 +66,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('register', [AdminAuthController::class, 'showRegisterForm'])->name('register');
     Route::post('register', [AdminAuthController::class, 'register']);
     Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
-
+    
 });
 
 Route::get('/', function () {
@@ -71,5 +77,6 @@ Route::get('/api/berita', [ModelBeritaController::class, 'getAllBerita']);
 Route::get('/api/classes', [ClassController::class, 'getAllClassNames']);
 Route::get('/api/absen', [DashboardController::class, 'getAttendanceByCurrentTime']);
 Route::get('/api/absenExit', [DashboardController::class, 'getExitAttendanceByCurrentTime']);
+Route::get('/api/getGuruList', [GuruController::class, 'getGuruList']);
 
 
