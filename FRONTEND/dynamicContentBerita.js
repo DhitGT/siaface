@@ -23,14 +23,16 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     ];
 
+    // items = await getBerita();
+
     // Get the container to hold the dynamic content
     const container = document.querySelector('#dynamicContentBerita');
 
     // Create the HTML elements for all items, but hide them initially
     items.forEach(item => {
-        const aTag = document.createElement('a');
-        aTag.href = "#";
-        aTag.classList.add('flex','bg-red-700', 'items-start', 'justify-start', 'text-start', 'min-h-64', 'border', 'border-gray-200', 'rounded-lg', 'shadow', 'md:flex-row', 'hover:bg-gray-100');
+        const aTag = document.createElement('div');
+        
+        aTag.classList.add('beritaCard','flex', 'items-start', 'justify-start', 'text-start', 'min-h-64', 'border', 'border-gray-200', 'rounded-lg', 'shadow', 'md:flex-row', 'hover:bg-gray-100');
         aTag.style.backgroundColor = 'rgba(0, 0, 0, 0.11)';
         aTag.style.backdropFilter = 'blur(5px)';
         aTag.style.display = 'none'; // Initially hide all items
@@ -50,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         divTag.appendChild(pTag);
 
         const imgTag = document.createElement('img');
-        imgTag.classList.add('border-2', 'border-white', 'object-cover', 'w-64', 'h-full', 'rounded-t-lg', 'md:w-64', 'md:h-full', 'md:rounded-lg');
+        imgTag.classList.add('border-2', 'border-white','ms-auto', 'object-cover', 'w-64', 'h-full', 'rounded-t-lg', 'md:w-64', 'md:h-full', 'md:rounded-lg');
         imgTag.style.aspectRatio = '1';
         imgTag.src = "http://localhost:8000/storage/" + item.cover;
         imgTag.alt = '';
@@ -64,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     let currentIndex = 0;
     const showNextItems = () => {
-        const allItems = container.querySelectorAll('a');
+        const allItems = container.querySelectorAll('.beritaCard');
         
         // Hide all items first
         allItems.forEach(item => item.style.display = 'none');
@@ -73,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         for (let i = 0; i < 2; i++) {
             const index = currentIndex + i;
             if (allItems[index]) {
-                allItems[index].style.display = 'block';
+                allItems[index].style.display = 'flex';
             }
         }
 
