@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     ];
 
-    // items = await getBerita();
+    items = await getBerita();
 
     // Get the container to hold the dynamic content
     const container = document.querySelector('#dynamicContentBerita');
