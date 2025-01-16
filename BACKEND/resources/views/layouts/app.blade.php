@@ -24,6 +24,10 @@
                         @csrf
                         <button type="submit" class="text-gray-600 hover:text-gray-800">Classes</button>
                     </form>
+                    <form action="{{ route('berita.index') }}" method="GET" id="berita-form" class="inline">
+                        @csrf
+                        <button type="submit" class="text-gray-600 hover:text-gray-800">Berita</button>
+                    </form>
                     <form action="{{ route('admin.logout') }}" method="POST" id="logout-form" class="inline">
                         @csrf
                         <button type="submit" class="text-gray-600 hover:text-gray-800">Logout</button>
@@ -41,6 +45,18 @@
         </div>
         <div class="md:hidden" id="navbar-menu">
             <div class="px-4 py-2">
+                <form action="{{ route('dashboard') }}" method="GET" id="dashboard-form" class="inline">
+                    @csrf
+                    <button type="submit" class="text-gray-600 hover:text-gray-800">Dashboard</button>
+                </form>
+                <form action="{{ route('classes') }}" method="GET" id="classes-form" class="inline">
+                    @csrf
+                    <button type="submit" class="text-gray-600 hover:text-gray-800">Classes</button>
+                </form>
+                <form action="{{ route('berita.index') }}" method="GET" id="berita-form" class="inline">
+                    @csrf
+                    <button type="submit" class="text-gray-600 hover:text-gray-800">Berita</button>
+                </form>
                 <form action="{{ route('admin.logout') }}" method="POST" id="logout-form" class="inline">
                     @csrf
                     <button type="submit" class="text-gray-600 hover:text-gray-800">Logout</button>
