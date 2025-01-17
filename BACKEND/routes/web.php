@@ -77,6 +77,7 @@ Route::get('/api/berita', [ModelBeritaController::class, 'getAllBerita']);
 Route::get('/api/classes', [ClassController::class, 'getAllClassNames']);
 Route::get('/api/absen', [DashboardController::class, 'getAttendanceByCurrentTime']);
 Route::get('/api/absenExit', [DashboardController::class, 'getExitAttendanceByCurrentTime']);
+Route::get('/api/get3DaysSuhu',[DashboardController::class, 'get3DaysSuhu']);
 Route::get('/api/getGuruList', [GuruController::class, 'getGuruList']);
 
 

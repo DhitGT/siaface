@@ -1,44 +1,47 @@
-let teachers = [
-    { name: 'RAMDANI, S.Kom', image: '/images/guru/RAMDANI,S.Kom.JPG' },
-    { name: 'HANUJI, S.Kom.', image: '/images/guru/HANUJI, S.Kom..JPG' },
-    { name: 'DEDDY MARYANTO, S.Kom', image: '/images/guru/Deddy Maryanto, S.Kom.jpg' },
-    { name: 'WENDY HADITTIA, S.Kom', image: '/images/guru/WENDY HADITTIA, S.Kom.JPG' },
-    { name: 'Dra.SUWARNI', image: '/images/guru/Dra.SUWARNI.JPG' },
-    { name: 'RIVAN PRASETIA, S.Kom', image: '/images/guru/RIVAN PRASETIA, S.Kom.JPG' },
-    { name: 'Kusariwati, M.Pd', image: '/images/guru/Kusariwati, M.Pd.jpg' },
-    { name: 'ATIK SUGIATI, S.Kom', image: '/images/guru/ATIK SUGIATI, S.Kom.JPG' }
-  ];
-
-  // Function to generate the slides
-  async function generateSlides() {
+async function generateSlides() {
     const swiperWrapper = document.querySelector('#guru-slider');
-
-
-    teachers = await getGuru()
     
+    // Fetch the teacher data from the server
+    teachers = await getGuru();
+
+    // Clear the swiperWrapper before adding new slides to avoid duplication
+    swiperWrapper.innerHTML = '';
+
     // Loop through the teachers array and create slides dynamically
     teachers.forEach(teacher => {
-      const slide = document.createElement('div');
-      slide.classList.add('swiper-slide', 'text-center');
+        const slide = document.createElement('div');
+        slide.classList.add('swiper-slide', 'text-center');
 
-      // Create image and name elements
-      const img = document.createElement('img');
-      img.setAttribute('alt', 'Teacher image' + teacher.image);
-      img.setAttribute('src', "http://localhost:8000/storage/guru/"+teacher.image);
-      img.classList.add('w-32', 'border-4', 'border-white', 'h-32', 'rounded-full', 'mx-auto');
+        // Create image and name elements
+        const img = document.createElement('img');
+        img.setAttribute('alt', 'Teacher image ' + teacher.image);
+        img.setAttribute('src', "http://localhost:8000/storage/guru/" + teacher.image);
+        img.classList.add('w-32', 'border-4', 'border-white', 'h-32', 'rounded-full', 'mx-auto');
 
-      const name = document.createElement('p');
-      name.classList.add('mt-2', 'text-2xl');
-      name.textContent = teacher.name;
+        const name = document.createElement('p');
+        name.classList.add('mt-2', 'text-2xl');
+        name.textContent = teacher.name;
 
-      // Append the image and name to the slide
-      slide.appendChild(img);
-      slide.appendChild(name);
+        // Append the image and name to the slide
+        slide.appendChild(img);
+        slide.appendChild(name);
 
-      // Append the slide to the swiper-wrapper
-      swiperWrapper.appendChild(slide);
+        // Append the slide to the swiper-wrapper
+        swiperWrapper.appendChild(slide);
     });
-  }
 
-  // Call the function to generate slides
-  generateSlides();
+    // Now initialize Swiper after the slides are created
+    const swiper = new Swiper('.swiper-container', {
+        // Add your swiper configurations here
+        loop: true, // Example of a setting
+        slidesPerView: 4,
+        spaceBetween: 10,
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+        },
+    });
+}
+
+// Call the function to generate slides
+generateSlides();

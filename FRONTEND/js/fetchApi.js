@@ -41,3 +41,11 @@ async function getGuru() {
     }
     return await response.json();
 }
+async function get3DaysSuhu() {
+    const response = await fetch('http://127.0.0.1:8000/api/get3DaysSuhu');
+    if (!response.ok) {
+        console.error('Failed to fetch');
+        return [];
+    }
+    return await response.json();
+}

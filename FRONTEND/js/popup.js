@@ -9,7 +9,7 @@ function showPopup(message = '', m2 = '', m3 = '',m4='') {
     popupMessage1.innerText = message;
     popupMessage2.innerText = m2;
     popupMessage3.innerText = m3;
-    popupMessage4.innerText = " Suhu Tubuh "+m4 +"°C" ;
+    popupMessage4.innerText = m4;
     popup.classList.add("show");
     overlay.classList.add("show");
 

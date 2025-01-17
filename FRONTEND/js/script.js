@@ -136,8 +136,11 @@ video.addEventListener("play", async () => {
 
                     drawBox.draw(canvas);
 
-
-                    const label = result.label;
+                    
+                    
+                    
+                    const label = result.label;  // Assuming `result.label` is the name you're checking
+                    
 
                     // Check if the label is not "unknown"
                     if (label !== "unknown" ) {
@@ -149,7 +152,7 @@ video.addEventListener("play", async () => {
                         const currentMinutes = getCurrentMinutes();
                         let keterangan = "Tepat Waktu"
                         console.log("JAM 2 : ", currentHour)
-                        if (currentMinutes >= MORNING_START && currentMinutes < MORNING_END && suhu != "") {
+                        if (currentMinutes >= MORNING_START && currentMinutes < MORNING_END  && suhu != "") {
                             if (label === lastLabel && !listUdahAbsen.some((absen) => absen.name === label)) {
                                 console.log("Masuk absensi");
                                 if (lastLabelTime && now - lastLabelTime >= 2000 && !attendancePosted) {
@@ -159,18 +162,37 @@ video.addEventListener("play", async () => {
 
                                     const currentTime = getCurrentTime();
                                     const currentMinutes = getCurrentMinutes();
+                                    await postAttendance(label, 'masuk',keterangan,"38.00"  ); // Call only once
+                                    let Days3Suhu = await get3DaysSuhu();  // Assuming this is an array similar to the one you provided
 
-                                    if (currentMinutes > LATE_THRESHOLD) {
-                                        showPopup('Anda terlambat', label, `Anda terlambat absen di jam ${currentTime}`,suhu);
-                                        speakText(`Selamat datang, ${label}, Anda terlambat absen di jam ${currentTime}`);
-                                        keterangan = "Terlambat"
+                                    
+                                    // Using `some()` to check if the label exists in the Days3Suhu array
+                                    const nameExists = Days3Suhu.some(item => item.name === label);
+
+                                    if (nameExists) {
+                                        if (currentMinutes > LATE_THRESHOLD) {
+                                            showPopup('Anda terlambat', label, `Anda terlambat absen di jam ${currentTime}`,"Suhu tubuh anda tinggi selama 3 Hari Belakangan ini Segera Periksakan Ke UKS" );
+                                            speakText(`Selamat datang, ${label}, Anda terlambat absen di jam ${currentTime} dan Suhu tubuh anda tinggi selama 3 Hari Belakangan ini Segera Periksakan Ke UKS`);
+                                            keterangan = "Terlambat"
+                                        } else {
+                                            showPopup('Selamat datang', label, `Anda absen di jam ${currentTime}`,"Suhu tubuh anda tinggi selama 3 Hari Belakangan ini Segera Periksakan Ke UKS" );
+                                            speakText(`Selamat datang, ${label}, Anda absen di jam ${currentTime} dan Suhu tubuh anda tinggi selama 3 Hari Belakangan ini Segera Periksakan Ke UKS`);
+                                            keterangan = "Hadir"
+                                        }
                                     } else {
-                                        showPopup('Selamat datang', label, `Anda absen di jam ${currentTime}`,suhu);
-                                        speakText(`Selamat datang, ${label}, Anda absen di jam ${currentTime}`);
-                                        keterangan = "Hadir"
+                                        if (currentMinutes > LATE_THRESHOLD) {
+                                            showPopup('Anda terlambat', label, `Anda terlambat absen di jam ${currentTime}`," Suhu Tubuh "+suhu +"°C" );
+                                            speakText(`Selamat datang, ${label}, Anda terlambat absen di jam ${currentTime}`);
+                                            keterangan = "Terlambat"
+                                        } else {
+                                            showPopup('Selamat datang', label, `Anda absen di jam ${currentTime}`," Suhu Tubuh "+suhu +"°C" );
+                                            speakText(`Selamat datang, ${label}, Anda absen di jam ${currentTime}`);
+                                            keterangan = "Hadir"
+                                        }
                                     }
 
-                                    postAttendance(label, 'masuk',keterangan,suhu  ); // Call only once
+                                    
+
                                     attendancePosted = true; // Set the flag
 
                                     await new Promise((resolve) => setTimeout(resolve, 4000));
@@ -192,7 +214,7 @@ video.addEventListener("play", async () => {
                                     clearInterval(detectionInterval); // Stop the detection
 
                                     const currentTime = getCurrentTime();
-                                    showPopup('Hati Hati', label, `Anda absen keluar di jam ${currentTime}`,suhu);
+                                    showPopup('Hati Hati', label, `Anda absen keluar di jam ${currentTime}`," Suhu Tubuh "+suhu +"°C" );
                                     speakText(`Hati Hati, ${label}, Anda absen keluar di jam ${currentTime}`);
 
                                     postAttendance(label, 'keluar',suhu ); // Call only once

@@ -40,6 +40,7 @@
             <tbody>
                 @forelse ($absens as $absen)
                     <tr class="hover:bg-gray-100">
+                        <form action="{{ route('updateKeterangan', $absen->id) }}" method="POST" class="inline">
                         <td class="py-2 px-4 border-b">
                             {{ $loop->iteration }}
                         </td>
@@ -51,23 +52,30 @@
                         </td>
                         <td class="py-2 px-4 border-b">
                             <!-- Editable Keterangan -->
-                            <form action="{{ route('updateKeterangan', $absen->id) }}" method="POST" class="inline">
+                            
                                 @csrf
                                 @method('PUT')
-                                <input type="text" name="keterangan" value="{{ $absen->keterangan }}"
-                                    class="w-full p-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <select name="keterangan" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="Hadir" {{ $absen->keterangan == 'Hadir' ? 'selected' : '' }}>Hadir</option>
+                                    <option value="Telat" {{ $absen->keterangan == 'Telat' ? 'selected' : '' }}>Telat</option>
+                                    <option value="Izin Dinas Luar" {{ $absen->keterangan == 'Izin Dinas Luar' ? 'selected' : '' }}>Izin Dinas Luar</option>
+                                    <option value="Izin Sakit" {{ $absen->keterangan == 'Izin Sakit' ? 'selected' : '' }}>Izin Sakit</option>
+                                    <option value="Izin Pulang Cepat" {{ $absen->keterangan == 'Izin Pulang Cepat' ? 'selected' : '' }}>Izin Pulang Cepat</option>
+                                </select>
+                       
+                        </td>
+
+                                <td class="py-2 px-4 border-b">
+                                    {{ $absen->entry_hour }}
+                                </td>
+                                <td class="py-2 px-4 border-b">
+                                    {{ $absen->date }}
+                                </td>
+                                <td class="py-2 px-4 border-b">
+                                    <!-- Submit button for the keterangan edit form -->
+                                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200">Save</button>
+                                </td>
                             </form>
-                        </td>
-                        <td class="py-2 px-4 border-b">
-                            {{ $absen->entry_hour }}
-                        </td>
-                        <td class="py-2 px-4 border-b">
-                            {{ $absen->date }}
-                        </td>
-                        <td class="py-2 px-4 border-b">
-                            <!-- Submit button for the keterangan edit form -->
-                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200">Save</button>
-                        </td>
                     </tr>
                 @empty
                     <tr>

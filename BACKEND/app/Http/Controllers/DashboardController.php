@@ -174,4 +174,47 @@ class DashboardController extends Controller
         return redirect()->route('dashboard')->with('success', 'Keterangan updated successfully!');
     }
 
+    public function get3DaysSuhu(Request $request)
+    {
+        try {
+            // Get the current date and the past 3 consecutive days
+            $currentDate = Carbon::now()->toDateString();
+            $dates = [
+                $currentDate, // today
+                Carbon::parse($currentDate)->subDay(1)->toDateString(), // yesterday
+                Carbon::parse($currentDate)->subDay(2)->toDateString(), // two days ago
+            ];
+
+            // Query the Absen model for records on the last 3 consecutive days with suhu > 37.5
+            $results = Absen::whereIn('date', $dates)
+                ->where('suhu', '>', 37.5)
+                ->get()
+                ->groupBy('name'); // Group results by teacher name
+
+            // Filter only those teachers who have suhu > 37.5 for all 3 days
+            $filteredResults = [];
+            foreach ($results as $name => $absens) {
+                if ($absens->count() === 3) {
+                    // All three days must be present for the teacher
+                    $filteredResults[] = [
+                        'name' => $name,
+                        'dates' => $absens->pluck('date'), // Dates where suhu was > 37.5
+                        'suhu' => $absens->pluck('suhu') // The suhu values for each of those dates
+                    ];
+                }
+            }
+
+            // Return the filtered results
+            return response()->json(
+$filteredResults
+            );
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve the data.',
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
 }
