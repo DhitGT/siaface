@@ -64,19 +64,57 @@ class DashboardController extends Controller
         try {
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
-                'flag' => 'required|in:masuk,keluar', // Validate the flag to ensure it is either 'masuk' or 'keluar'
+                'flag' => 'required|in:masuk,keluar',
+                'image' => 'nullable|string', // Allow image to be optional
+                'keterangan' => 'nullable|string', // Allow image to be optional
+                'suhu' => 'nullable|string', // Allow image to be optional
             ]);
-
+    
             $currentDate = Carbon::now()->toDateString(); // Current date
             $currentTime = Carbon::now()->setTimezone('Asia/Jakarta')->toTimeString(); // Current time
-
+    
+            // Handle the image if provided
+            $imagePath = null;
+            if ($request->has('image') && !empty($request->input('image'))) {
+                // Get the base64 string of the image
+                $imageData = $request->input('image');
+    
+                // Remove the base64 header (data:image/jpeg;base64,)
+                $imageData = str_replace('data:image/jpeg;base64,', '', $imageData);
+                $imageData = str_replace(' ', '+', $imageData);
+    
+                // Decode the base64 string to raw image data
+                $image = base64_decode($imageData);
+    
+                // Create a unique filename for the image
+                $imageName = 'attendance_' . time() . '.jpg';
+    
+                // Store the image in the public/attendance_images directory
+                $path = storage_path('app/public/attendance_images/' . $imageName);
+    
+                // Ensure the directory exists
+                if (!file_exists(storage_path('app/public/attendance_images'))) {
+                    mkdir(storage_path('app/public/attendance_images'), 0777, true);
+                }
+    
+                // Save the image to the directory
+                file_put_contents($path, $image);
+    
+                // Set the image path to be saved in the database
+                $imagePath = 'attendance_images/' . $imageName; // Relative path for storage
+            }
+    
+            // Process attendance based on 'masuk' or 'keluar' flag
             if ($validatedData['flag'] === 'masuk') {
                 // Handle 'masuk'
                 $validatedData['date'] = $currentDate;
                 $validatedData['entry_hour'] = $currentTime;
-
+                $validatedData['absent_image'] =  $imagePath; // Save the image path
+                
+                
+    
                 Absen::create($validatedData); // Create a new record
-
+    
                 return response()->json([
                     'success' => true,
                     'message' => 'Attendance record for "Masuk" added successfully!',
@@ -86,9 +124,14 @@ class DashboardController extends Controller
                 $absen = Absen::where('name', $validatedData['name'])
                     ->where('date', $currentDate)
                     ->first();
-
+    
                 if ($absen) {
-                    $absen->update(['exit_hour' => $currentTime]); // Update exit_hour
+                    $absen->update([
+                        'exit_hour' => $currentTime,
+                        'absent_image' => $imagePath, // Update the image path if necessary
+                        'suhu' => $validatedData['suhu'], // Update the image path if necessary
+                    ]);
+    
                     return response()->json([
                         'success' => true,
                         'message' => 'Attendance record for "Keluar" updated successfully!',
@@ -103,7 +146,7 @@ class DashboardController extends Controller
         } catch (\Exception $e) {
             // Log the error for debugging
             // \Log::error('Error handling attendance record: ' . $e->getMessage());
-
+    
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to handle attendance record. Please try again.',
@@ -111,4 +154,24 @@ class DashboardController extends Controller
             ]);
         }
     }
+
+    public function updateKeterangan(Request $request, $id)
+    {
+        // Validate the keterangan field
+        $request->validate([
+            'keterangan' => 'required|string|max:255',
+        ]);
+
+        // Find the Absen record by ID
+        $absen = Absen::findOrFail($id);
+
+        // Update the keterangan field
+        $absen->update([
+            'keterangan' => $request->input('keterangan'),
+        ]);
+
+        // Redirect back to the dashboard with a success message
+        return redirect()->route('dashboard')->with('success', 'Keterangan updated successfully!');
+    }
+
 }

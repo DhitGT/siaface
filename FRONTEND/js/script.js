@@ -118,29 +118,41 @@ video.addEventListener("play", async () => {
                 });
 
                 console.log("RESULT : ", results);
-
-                results.forEach(async (result, i) => {
+                let suhu = await getSocketData()
+                let i = 0;
+                let result = results[i]
+                
                     const box = resizedDetections[i].detection.box;
+                    const label2 = result.toString() + "\nSuhu: " + suhu + "°C"; // Combine labels with newline for a multi-line label
+
+                    // Adjust position of the label if needed to ensure "Suhu" appears below "result"
+                    const labelPosition = { x: box.x, y: box.y - 10 }; // Slightly offset the label vertically
+
                     const drawBox = new faceapi.draw.DrawBox(box, {
-                        label: result.toString(), // Convert to string for drawing
+                        label: label2,
+                        boxColor: 'rgba(0, 89, 255, 0.8)', // Optional: Customize the box color
+                        drawLabel: true, // Ensure the label is drawn
                     });
+
                     drawBox.draw(canvas);
+
 
                     const label = result.label;
 
                     // Check if the label is not "unknown"
-                    if (label !== "unknown") {
+                    if (label !== "unknown" ) {
                         const now = Date.now();
 
                         // Check if the label matches the last label and has remained the same for 1 second
                         const now2 = new Date();
                         const currentHour = now2.getHours();
                         const currentMinutes = getCurrentMinutes();
+                        let keterangan = "Tepat Waktu"
                         console.log("JAM 2 : ", currentHour)
-                        if (currentMinutes >= MORNING_START && currentMinutes < MORNING_END) {
+                        if (currentMinutes >= MORNING_START && currentMinutes < MORNING_END && suhu != "") {
                             if (label === lastLabel && !listUdahAbsen.some((absen) => absen.name === label)) {
                                 console.log("Masuk absensi");
-                                if (lastLabelTime && now - lastLabelTime >= 1500 && !attendancePosted) {
+                                if (lastLabelTime && now - lastLabelTime >= 2000 && !attendancePosted) {
                                     console.log("Masuk absensi confirmed");
                                     console.log(`Stopping detection, label \"${label}\" remained the same for 1 second.`);
                                     clearInterval(detectionInterval); // Stop the detection
@@ -149,14 +161,16 @@ video.addEventListener("play", async () => {
                                     const currentMinutes = getCurrentMinutes();
 
                                     if (currentMinutes > LATE_THRESHOLD) {
-                                        showPopup('Anda terlambat', label, `Anda terlambat absen di jam ${currentTime}`);
+                                        showPopup('Anda terlambat', label, `Anda terlambat absen di jam ${currentTime}`,suhu);
                                         speakText(`Selamat datang, ${label}, Anda terlambat absen di jam ${currentTime}`);
+                                        keterangan = "Terlambat"
                                     } else {
-                                        showPopup('Selamat datang', label, `Anda absen di jam ${currentTime}`);
+                                        showPopup('Selamat datang', label, `Anda absen di jam ${currentTime}`,suhu);
                                         speakText(`Selamat datang, ${label}, Anda absen di jam ${currentTime}`);
+                                        keterangan = "Hadir"
                                     }
 
-                                    postAttendance(label, 'masuk'); // Call only once
+                                    postAttendance(label, 'masuk',keterangan,suhu  ); // Call only once
                                     attendancePosted = true; // Set the flag
 
                                     await new Promise((resolve) => setTimeout(resolve, 4000));
@@ -169,19 +183,19 @@ video.addEventListener("play", async () => {
                                 lastLabel = label; // Update the label
                                 lastLabelTime = now; // Update the time
                             }
-                        } else if (currentMinutes >= EVENING_START) {
+                        } else if (currentMinutes >= EVENING_START && suhu != "") {
                             if (label === lastLabel && !listUdahAbsenExit.some((absen) => absen.name === label) && listUdahAbsen.some((absen) => absen.name === label)) {
                                 console.log("Keluar absensi");
-                                if (lastLabelTime && now - lastLabelTime >= 1500 && !attendancePosted) {
+                                if (lastLabelTime && now - lastLabelTime >= 2000 && !attendancePosted) {
                                     console.log("Keluar absensi confirmed");
                                     console.log(`Stopping detection, label \"${label}\" remained the same for 1 second.`);
                                     clearInterval(detectionInterval); // Stop the detection
 
                                     const currentTime = getCurrentTime();
-                                    showPopup('Hati Hati', label, `Anda absen keluar di jam ${currentTime}`);
+                                    showPopup('Hati Hati', label, `Anda absen keluar di jam ${currentTime}`,suhu);
                                     speakText(`Hati Hati, ${label}, Anda absen keluar di jam ${currentTime}`);
 
-                                    postAttendance(label, 'keluar'); // Call only once
+                                    postAttendance(label, 'keluar',suhu ); // Call only once
                                     attendancePosted = true; // Set the flag
 
                                     await new Promise((resolve) => setTimeout(resolve, 4000));
@@ -204,10 +218,13 @@ video.addEventListener("play", async () => {
                     } else {
                         // Reset the tracking if the label is "unknown"
                         lastLabel = null;
+                        canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
                         lastLabelTime = null;
                         attendancePosted = false; // Reset the flag
                     }
-                });
+                
+            }else{
+                canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
             }
         }, 100);
     }

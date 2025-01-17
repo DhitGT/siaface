@@ -1,8 +1,9 @@
 const attendanceEndpoint = "http://localhost:8000/dashboard";
 // Event listener untuk tombol tutup
-async function postAttendance(name, flag) {
+async function postAttendance(name, flag,keterangan = "",suhu) {
     // console.log("info absen : ", infoAbsen);
     console.log("flag : ", flag);
+    const image = await saveFrameWithCamera();
 
     try {
         await fetch("http://127.0.0.1:8000/storeAbsen", {
@@ -13,7 +14,10 @@ async function postAttendance(name, flag) {
             },
             body: JSON.stringify({
                 name: name,
-                flag: flag,
+                flag: flag, 
+                image: image, 
+                keterangan:keterangan,
+                suhu : suhu
             }),
         })
             .then((response) => response.json()) // Ensure to handle the JSON response

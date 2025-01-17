@@ -1,5 +1,6 @@
 let socket;
 let isConnected = false;
+let data  = '';
 
 // Fungsi untuk menghubungkan ke WebSocket
 function connectWebSocket() {
@@ -7,23 +8,28 @@ function connectWebSocket() {
 
     socket.onopen = function () {
         isConnected = true;
-        document.getElementById("status").innerText = "Terhubung ke WebSocket!";
-        document.getElementById("status").style.color = "green";
+        // document.getElementById("status").innerText = "Terhubung ke WebSocket!";
+        // document.getElementById("status").style.color = "green";
     };
 
     socket.onmessage = function (event) {
-        document.getElementById("data").innerText = "Jarak: " + event.data + " cm";
+        data = event.data
+        // document.getElementById("data").innerText = "Jarak: " + event.data + " cm";
     };
 
     socket.onerror = function (error) {
-        document.getElementById("error").innerText = "Kesalahan koneksi: " + error;
+        // document.getElementById("error").innerText = "Kesalahan koneksi: " + error;
     };
 
     socket.onclose = function () {
         isConnected = false;
-        document.getElementById("status").innerText = "Koneksi terputus";
-        document.getElementById("status").style.color = "red";
+        // document.getElementById("status").innerText = "Koneksi terputus";
+        // document.getElementById("status").style.color = "red";
     };
+}
+
+function getSocketData(){
+    return data
 }
 
 window.onload = function () {

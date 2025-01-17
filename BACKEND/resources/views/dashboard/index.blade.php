@@ -29,9 +29,12 @@
             <thead>
                 <tr class="bg-gray-200">
                     <th class="py-2 px-4 border-b">#</th>
+                    <th class="py-2 px-4 border-b">Image</th>
                     <th class="py-2 px-4 border-b">Name</th>
+                    <th class="py-2 px-4 border-b">Keterangan</th>
                     <th class="py-2 px-4 border-b">Entry Hour</th>
                     <th class="py-2 px-4 border-b">Date</th>
+                    <th class="py-2 px-4 border-b">Action</th> <!-- Added Action column -->
                 </tr>
             </thead>
             <tbody>
@@ -40,8 +43,20 @@
                         <td class="py-2 px-4 border-b">
                             {{ $loop->iteration }}
                         </td>
+                        <td class="py-2 px-4 h-8 border-b">
+                            <img class="h-20" src="{{ asset('storage/' . $absen->absent_image) }}" alt="Absent Image">
+                        </td>
                         <td class="py-2 px-4 border-b">
                             {{ $absen->name }}
+                        </td>
+                        <td class="py-2 px-4 border-b">
+                            <!-- Editable Keterangan -->
+                            <form action="{{ route('updateKeterangan', $absen->id) }}" method="POST" class="inline">
+                                @csrf
+                                @method('PUT')
+                                <input type="text" name="keterangan" value="{{ $absen->keterangan }}"
+                                    class="w-full p-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </form>
                         </td>
                         <td class="py-2 px-4 border-b">
                             {{ $absen->entry_hour }}
@@ -49,10 +64,14 @@
                         <td class="py-2 px-4 border-b">
                             {{ $absen->date }}
                         </td>
+                        <td class="py-2 px-4 border-b">
+                            <!-- Submit button for the keterangan edit form -->
+                            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200">Save</button>
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center py-4">No attendance records found.</td>
+                        <td colspan="6" class="text-center py-4">No attendance records found.</td>
                     </tr>
                 @endforelse
             </tbody>

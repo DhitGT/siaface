@@ -23,7 +23,7 @@ use App\Http\Controllers\GuruController;
 
 Route::middleware(['auth:admin'])->group(function () {
     // Route::resource('classes', ClassController::class);
-
+    Route::put('/absen/{id}/updateKeterangan', [DashboardController::class, 'updateKeterangan'])->name('updateKeterangan');
     Route::get('/guru', [GuruController::class, 'index'])->name("guru.index");
     Route::get('/guru/create', [GuruController::class, 'create']);
     Route::post('/guru', [GuruController::class, 'store']);
