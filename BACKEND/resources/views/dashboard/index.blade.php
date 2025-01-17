@@ -57,7 +57,7 @@
                                 @method('PUT')
                                 <select name="keterangan" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     <option value="Hadir" {{ $absen->keterangan == 'Hadir' ? 'selected' : '' }}>Hadir</option>
-                                    <option value="Telat" {{ $absen->keterangan == 'Telat' ? 'selected' : '' }}>Telat</option>
+                                    <option value="Terlambat" {{ $absen->keterangan == 'Terlambat' ? 'selected' : '' }}>Terlambat</option>
                                     <option value="Izin Dinas Luar" {{ $absen->keterangan == 'Izin Dinas Luar' ? 'selected' : '' }}>Izin Dinas Luar</option>
                                     <option value="Izin Sakit" {{ $absen->keterangan == 'Izin Sakit' ? 'selected' : '' }}>Izin Sakit</option>
                                     <option value="Izin Pulang Cepat" {{ $absen->keterangan == 'Izin Pulang Cepat' ? 'selected' : '' }}>Izin Pulang Cepat</option>

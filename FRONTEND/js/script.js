@@ -118,7 +118,8 @@ video.addEventListener("play", async () => {
                 });
 
                 console.log("RESULT : ", results);
-                let suhu = await getSocketData()
+                // let suhu = await getSocketData()
+                let suhu = "37.00"
                 let i = 0;
                 let result = results[i]
                 
@@ -127,6 +128,8 @@ video.addEventListener("play", async () => {
 
                     // Adjust position of the label if needed to ensure "Suhu" appears below "result"
                     const labelPosition = { x: box.x, y: box.y - 10 }; // Slightly offset the label vertically
+
+                    // console.log("face api : ", faceapi)
 
                     const drawBox = new faceapi.draw.DrawBox(box, {
                         label: label2,
@@ -152,48 +155,56 @@ video.addEventListener("play", async () => {
                         const currentMinutes = getCurrentMinutes();
                         let keterangan = "Tepat Waktu"
                         console.log("JAM 2 : ", currentHour)
-                        if (currentMinutes >= MORNING_START && currentMinutes < MORNING_END  && suhu != "") {
+                        if (currentMinutes >= MORNING_START && currentMinutes < MORNING_END  ) {
                             if (label === lastLabel && !listUdahAbsen.some((absen) => absen.name === label)) {
                                 console.log("Masuk absensi");
                                 if (lastLabelTime && now - lastLabelTime >= 2000 && !attendancePosted) {
                                     console.log("Masuk absensi confirmed");
                                     console.log(`Stopping detection, label \"${label}\" remained the same for 1 second.`);
                                     clearInterval(detectionInterval); // Stop the detection
-
+                                    
                                     const currentTime = getCurrentTime();
                                     const currentMinutes = getCurrentMinutes();
-                                    await postAttendance(label, 'masuk',keterangan,"38.00"  ); // Call only once
-                                    let Days3Suhu = await get3DaysSuhu();  // Assuming this is an array similar to the one you provided
+
+                                    if (currentMinutes > LATE_THRESHOLD) {
+                                        keterangan = "Terlambat"
+                                    } else {
+                                        keterangan = "Hadir"
+                                    }
+
+                                    postAttendance(label, 'masuk',keterangan,"38.00"  ); // Call only once
+                                    attendancePosted = true; // Set the flag
+                                    // let Days3Suhu = await get3DaysSuhu();  // Assuming this is an array similar to the one you provided
 
                                     
                                     // Using `some()` to check if the label exists in the Days3Suhu array
-                                    const nameExists = Days3Suhu.some(item => item.name === label);
+                                    // const nameExists = Days3Suhu.some(item => item.name === label);
+                                    const nameExists = false
 
                                     if (nameExists) {
                                         if (currentMinutes > LATE_THRESHOLD) {
                                             showPopup('Anda terlambat', label, `Anda terlambat absen di jam ${currentTime}`,"Suhu tubuh anda tinggi selama 3 Hari Belakangan ini Segera Periksakan Ke UKS" );
                                             speakText(`Selamat datang, ${label}, Anda terlambat absen di jam ${currentTime} dan Suhu tubuh anda tinggi selama 3 Hari Belakangan ini Segera Periksakan Ke UKS`);
-                                            keterangan = "Terlambat"
+                                            // keterangan = "Terlambat"
                                         } else {
                                             showPopup('Selamat datang', label, `Anda absen di jam ${currentTime}`,"Suhu tubuh anda tinggi selama 3 Hari Belakangan ini Segera Periksakan Ke UKS" );
                                             speakText(`Selamat datang, ${label}, Anda absen di jam ${currentTime} dan Suhu tubuh anda tinggi selama 3 Hari Belakangan ini Segera Periksakan Ke UKS`);
-                                            keterangan = "Hadir"
+                                            // keterangan = "Hadir"
                                         }
                                     } else {
                                         if (currentMinutes > LATE_THRESHOLD) {
                                             showPopup('Anda terlambat', label, `Anda terlambat absen di jam ${currentTime}`," Suhu Tubuh "+suhu +"°C" );
                                             speakText(`Selamat datang, ${label}, Anda terlambat absen di jam ${currentTime}`);
-                                            keterangan = "Terlambat"
+                                            // keterangan = "Terlambat"
                                         } else {
                                             showPopup('Selamat datang', label, `Anda absen di jam ${currentTime}`," Suhu Tubuh "+suhu +"°C" );
                                             speakText(`Selamat datang, ${label}, Anda absen di jam ${currentTime}`);
-                                            keterangan = "Hadir"
+                                            // keterangan = "Hadir"
                                         }
                                     }
 
                                     
 
-                                    attendancePosted = true; // Set the flag
 
                                     await new Promise((resolve) => setTimeout(resolve, 4000));
                                     // Reset and restart detection

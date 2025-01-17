@@ -21,7 +21,7 @@
                 <form action="{{ route('classes.destroy', $class->id) }}" method="POST" class="ml-4">
                     @csrf
                     {{ method_field('DELETE') }}
-                    <button type="submit" class="text-red-500 hover:text-red-700">...</button>
+                    <button type="submit" class="text-red-500 hover:text-red-700">Delete</button>
                 </form>
             </div>
 
@@ -131,8 +131,9 @@
 
             function startCapture(event) {
                 const classId = event.target.dataset.classId;
-
-                captureIntervals[classId] = setInterval(() => captureImage(classId), 500);
+                
+                    captureIntervals[classId] = setInterval(() => captureImage(classId), 1000);
+                
             }
 
             function stopCapture(event) {
@@ -143,6 +144,13 @@
             }
 
             function captureImage(classId) {
+                // Check if the capturedImages array for this class has reached the limit
+                if (capturedImages[classId] && capturedImages[classId].length >= 4) {
+                    alert('You can only capture a maximum of 4 images.');
+                    stopCapture({ target: { dataset: { classId } } }); // Stop capturing
+                    return;
+                }
+
                 const cameraStream = document.getElementById(`cameraStream${classId}`);
                 const captureCanvas = document.getElementById(`captureCanvas${classId}`);
                 const previewContainer = document.getElementById(`previewContainer${classId}`);
@@ -159,10 +167,11 @@
                 div.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-cover rounded-md" alt="Captured Image" />`;
                 previewContainer.appendChild(div);
 
-                // Save the captured image to array for the respective class
+                // Save the captured image to the array for the respective class
                 if (!capturedImages[classId]) capturedImages[classId] = [];
                 capturedImages[classId].push(imgUrl);
             }
+
         });
 
         // Save Captured Images for the Class

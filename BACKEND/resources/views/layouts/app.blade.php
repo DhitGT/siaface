@@ -10,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100  min-h-screen ">
     <nav class="bg-white shadow">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="flex justify-between items-center">
@@ -74,14 +74,16 @@
         </div>
     </nav>
 
-    <main class="container mx-auto py-6">
+    <main class="container mx-auto bg-orange-300 py-6">
         @yield('content')
     </main>
 
-    <footer class="text-center py-4 bg-white shadow mt-6">
-        &copy;
-        {{ date('Y') }} Siaface
-    </footer>
+    <div class="flex bg-green-400 min-w-screen absolute bottom-0 right-[50vw] justify-center mt-auto">
+        <footer class="text-center mt-auto min-w-screen bg-white shadow mt-6">
+            &copy;
+            {{ date('Y') }} Siaface
+        </footer>
+    </div>
 
     <script>
         const toggleButton = document.getElementById('navbar-toggle');
